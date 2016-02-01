@@ -1,0 +1,42 @@
+API
+
+The API is currently at version 1, so all documented paths are currently accessible via
+
+ /api/v1
+
+== Projects
+
+=== Get All Projects
+
+ GET /:subject:/projects
+
+Retrieve all the projects belonging to the subject
+
+[source,javascript]
+Status: 200 OK
+{
+    [
+        {
+            "id": "projectId",
+	    "uri": "https://api.huskydocs.com/jim/project/projectId"
+        },
+	{
+            "id": "projectId2",
+	    "uri": "https://api.huskydocs.com/jim/project/projectId2"
+	}
+    ]
+}
+
+=== Get Project
+
+ GET /:subject:/project/:project
+
+Retrieve information regarding and individial project
+
+[source,javascript]
+Status: 200 OK
+{
+    "id": "Project ID",
+    "name": "Project name",
+    "description": "Project Description",
+}
