@@ -8,7 +8,7 @@ The API is currently at version 1, so all documented paths are currently accessi
 
 === Get All Projects
 
- GET /:subject:/projects
+ GET project/:subject:
 
 Retrieve all the projects belonging to the subject
 
@@ -17,26 +17,52 @@ Status: 200 OK
 {
     [
         {
-            "id": "projectId",
-	    "uri": "https://api.huskydocs.com/jim/project/projectId"
+            "name": "projectName",
+	    "uri": "https://api.huskydocs.com/jim/project/projectName"
         },
 	{
-            "id": "projectId2",
-	    "uri": "https://api.huskydocs.com/jim/project/projectId2"
+            "name": "projectName2",
+	    "uri": "https://api.huskydocs.com/jim/project/projectName2"
 	}
     ]
 }
 
 === Get Project
 
- GET /:subject:/project/:project
+ GET /project/:subject:/:project:
 
-Retrieve information regarding and individial project
+Retrieve information regarding an individial project
 
 [source,javascript]
 Status: 200 OK
 {
-    "id": "Project ID",
-    "name": "Project name",
-    "description": "Project Description",
+    "name": "projectName",
+    "description": "Project Description"
 }
+
+=== Create Project
+
+ POST /project/:subject:/:project:
+
+Create a Project that will belong to the specified user
+
+[source,javascript]
+{
+    "description": "Project Description"
+}
+
+[source,javascript]
+Status: 200 OK
+{
+    "name": "projectName",
+    "description": "Project Description"
+}
+
+=== Delete Project
+
+ DELETE /project/:subject:/:project:
+
+Remove a Project and all content belonging to it
+
+[source,javascript]
+Status: 200 OK
