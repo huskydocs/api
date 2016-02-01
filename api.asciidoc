@@ -18,11 +18,11 @@ Status: 200 OK
     [
         {
             "name": "projectName",
-	    "uri": "https://api.huskydocs.com/jim/project/projectName"
+	    "uri": "https://api.huskydocs.com/project/jim/projectName"
         },
 	{
             "name": "projectName2",
-	    "uri": "https://api.huskydocs.com/jim/project/projectName2"
+	    "uri": "https://api.huskydocs.com/project/jim/projectName2"
 	}
     ]
 }
@@ -42,7 +42,7 @@ Status: 200 OK
 
 === Create Project
 
- POST /project/:subject:/:project:
+ PUT /project/:subject:/:project:
 
 Create a Project that will belong to the specified user
 
@@ -52,7 +52,7 @@ Create a Project that will belong to the specified user
 }
 
 [source,javascript]
-Status: 200 OK
+Status: 201 Created
 {
     "name": "projectName",
     "description": "Project Description"
@@ -65,4 +65,73 @@ Status: 200 OK
 Remove a Project and all content belonging to it
 
 [source,javascript]
+Status: 204 No Content
+
+== Documents
+
+=== Get All Documents
+
+ GET document/:subject:/:project:
+
+Retrieve all the documents belonging to the project
+
+[source,javascript]
 Status: 200 OK
+{
+    [
+        {
+            "name": "documentName",
+	    "uri": "https://api.huskydocs.com/document/jim/projectName/documentName"
+        },
+	{
+            "name": "documentName2",
+	    "uri": "https://api.huskydocs.com/document/jim/projectName/documentName2"
+	}
+    ]
+}
+
+=== Get Document
+
+ GET /document/:subject:/:project:/:document:
+
+Retrieve the contents of a document
+
+[source,javascript]
+Status: 200 OK
+= Document Title
+Some text
+
+=== Create Document
+
+ PUT /document/:subject:/:project:/:document:
+
+Create a new document
+
+[source,javascript]
+= Document Title
+Some text
+
+[source,javascript]
+Status: 201 Created
+
+=== Update Document
+
+ POST /document/:subject:/:project:/:document:
+
+Update the contents of an existing document
+
+[source,javascript]
+= Document Title
+Some text
+
+[source,javascript]
+Status: 204 No Content
+
+=== Delete Document
+
+ DELETE /document/:subject:/:project:/:document:
+
+Remove a document from a project
+
+[source,javascript]
+Status: 204 No Content
