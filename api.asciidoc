@@ -105,11 +105,13 @@ Some text
 
  PUT /document/:subject:/:project:/:document:
 
-Create a new document
+Create a new document within the project
 
 [source,javascript]
+----
 = Document Title
 Some text
+----
 
 [source,javascript]
 Status: 201 Created
@@ -121,8 +123,10 @@ Status: 201 Created
 Update the contents of an existing document
 
 [source,javascript]
+----
 = Document Title
 Some text
+----
 
 [source,javascript]
 Status: 204 No Content
