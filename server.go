@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/huskydocs/engine/persistence"
 	"github.com/julienschmidt/httprouter"
+	"gopkg.in/mgo.v2"
 	"log"
 	"net/http"
 )
@@ -39,7 +40,25 @@ func (ph *PersistenceHandler) Projects(w http.ResponseWriter, r *http.Request, p
 func (ph *PersistenceHandler) Project(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
-func (ph *PersistenceHandler) CreateProject(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (ph *PersistenceHandler) CreateProject(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	fmt.Printf("Received request to create Project: %s/%s \n", params.ByName("subject"), params.ByName("project"))
+	p, err := decodeProject(r)
+	p.Subject = params.ByName("subject")
+	p.Name = params.ByName("project")
+
+	if err != nil {
+		handleDecodingError(w, err)
+		return
+	}
+
+	err = persistProject(p, ph.PS)
+	if err != nil {
+		fmt.Printf("Error persisting new project: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error occurred while creating the project"))
+		return
+	}
+	w.Write([]byte("Project created successfully"))
 }
 
 func (ph *PersistenceHandler) DeleteProject(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -92,6 +111,12 @@ type Subject struct {
 	Email    string
 }
 
+type Project struct {
+	Subject     string
+	Name        string
+	Description string
+}
+
 func decodeSubject(r *http.Request) (Subject, error) {
 	defer r.Body.Close()
 	decoder := json.NewDecoder(r.Body)
@@ -101,9 +126,30 @@ func decodeSubject(r *http.Request) (Subject, error) {
 	return s, err
 }
 
+func decodeProject(r *http.Request) (Project, error) {
+	defer r.Body.Close()
+	decoder := json.NewDecoder(r.Body)
+
+	var p Project
+	err := decoder.Decode(&p)
+	return p, err
+}
+
 func persistSubject(s Subject, ps *persistence.PersistenceSession) error {
 	subject := &persistence.Subject{Username: s.Username, Email: s.Email}
 	err := ps.CreateSubject(subject)
+	return err
+}
+
+func persistProject(p Project, ps *persistence.PersistenceSession) error {
+	owner, err := ps.Subject(p.Subject)
+	if err != nil {
+		return err
+	}
+
+	ownerRef := mgo.DBRef{Collection: "subject", Id: owner.Id}
+	project := &persistence.Project{Owner: ownerRef, Name: p.Name, Description: p.Description}
+	err = ps.CreateProject(project)
 	return err
 }
 
